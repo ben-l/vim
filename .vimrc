@@ -55,6 +55,9 @@ Plugin 'pangloss/vim-javascript'
 "markdown
 Plugin 'plasticboy/vim-markdown'
 
+"Live Preview for markdown
+Plugin 'shime/vim-livedown'
+
 "docker syntax highlighting & snippets
 Plugin 'ekalinin/Dockerfile.vim' 
 "docker-compose syntax highlighting
