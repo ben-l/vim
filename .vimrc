@@ -56,6 +56,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'plasticboy/vim-markdown'
 
 "Live Preview for markdown
+" (need npm installed) npm install -g livedown
 Plugin 'shime/vim-livedown'
 
 "docker syntax highlighting & snippets
@@ -88,6 +89,10 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 
 " remapping: nmap(normal mode) vmap(visual) imap(insert mode).
 " the 'nore' is to prevent looping
+"
+" for vim-livedown markdown, launch/kill the livedown server
+nmap lt :LivedownToggle<CR>
+
 
 " copy and paste shortcuts for system clipboard
 " vnoremap <C-y> "+y (commented because the *y line is uncommented) 
