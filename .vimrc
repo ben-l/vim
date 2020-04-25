@@ -194,3 +194,4 @@ highlight BadWhiteSpace ctermbg=red  guibg=red
 
 "for latex live preview (default pdfviewer)
 let g:livepreview_previewer = 'zathura'
+:noremap <silent> <leader>lp :LLPStartPreview<CR>
