@@ -20,6 +20,7 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'Valloric/YouCompleteMe'
 
 "syntax checking
+" for python syntax check, must install autopep8, flake8 etc with sudo pip
 Plugin 'w0rp/ale'
 
 "automate correcting errors(had to install with pip)
@@ -91,7 +92,7 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/
 " the 'nore' is to prevent looping
 "
 " for vim-livedown markdown, launch/kill the livedown server
-nnoremap <silent><Leader>lt :LivedownToggle<CR>
+:noremap <silent> <leader>lt :LivedownToggle<CR>
 
 
 " copy and paste shortcuts for system clipboard
