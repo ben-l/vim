@@ -154,7 +154,7 @@ set wildignore+=*.bmp,,*.gif,*.ico,*.jpg,*.png,*.pdf "ignore images
 "
 
 " format/style settings
-au BufNewFile,BufRead *.py,*.js,*.go,*.html,*.css,*.h,*.c,*.cpp,*.java,*.md,*.json
+au BufNewFile,BufRead *.py,*.js,*.go,*.html,*.css,*.h,*.c,*.cpp,*.java,*.md,*.json,*.txt
 	\ set tabstop=4   |
 	\ set softtabstop=4 |
 	\ set shiftwidth=4 |
