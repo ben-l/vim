@@ -93,23 +93,22 @@ nnoremap <Tab> :tabnext<CR>
 nnoremap <S-Tab> :tabprevious<CR>
 
 " Split Horizontal
-nnoremap <leader>hs :split<CR>
+nnoremap <leader>sx :split<CR>
 
 " Split Vertical
-nnoremap <leader>vs :vsplit<CR>
+nnoremap <leader>sv :vsplit<CR>
 
 " Open an interactive bash shell with <leader>sh
 nnoremap <leader>sh :sh<CR>
-
 
 " must be compiled with +terminal support
 " :echo has('terminal')
 " output: 1=yes 0=no
 " Open terminal in split horizontal
-nnoremap <leader>ht :horizontal terminal<CR>
+nnoremap <leader>tx :horizontal terminal<CR>
 
 " Open terminal in split vertical
-nnoremap <leader>vt :vertical terminal<CR>
+nnoremap <leader>tv :vertical terminal<CR>
 
 " Open terminal in new tab
 nnoremap <leader>tt :tab terminal<CR>
