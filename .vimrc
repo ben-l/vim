@@ -1,3 +1,6 @@
+"" Set mapleader to space
+let mapleader = " "
+
 "both are required for Vundle and should be at the top of the .vimrc file
 set nocompatible 
 set pastetoggle=<F3>
@@ -13,11 +16,6 @@ Plugin 'VundleVim/Vundle.vim'
 
 " navigate between vim and tmux splits
 Plugin 'christoomey/vim-tmux-navigator'
-
-"autocomplete package (install ncurses5-compat-libs with a aur package manager -
-"otherwise ymcd server will not start as libtinfo.so.5 is missing)
-"also see the below code for setting the ycm conf file
-Plugin 'ycm-core/YouCompleteMe'
 
 "syntax checking
 Plugin 'w0rp/ale'
@@ -36,6 +34,8 @@ Plugin 'tpope/vim-fugitive'
 
 "search files with the ctrl-p program
 Plugin 'ctrlpvim/ctrlp.vim'
+
+Plugin 'junegunn/fzf.vim'
 
 "surround text with parentheses, brackets, quotes, tags etc
 Plugin 'tpope/vim-surround'
@@ -68,7 +68,6 @@ filetype plugin on
 filetype plugin indent on	" required
 syntax on
 
-
 " disable beeps
 set noerrorbells visualbell t_vb=
 if has('autocmd')
@@ -76,17 +75,44 @@ if has('autocmd')
 endif
 
 
-"add this line to .vimrc after loading YCM; this sets the default location for
-"ycm_extra_conf.py (needed for .c and .cpp extensions)
-"Also if the YcmServer is unable to load cd into ~/.vim/bundle/YouCompleteMe/
-"and ./install.py --clang-completer
-"./install.py --all for autocomplete to be used for most languages including
-"go, rust, c#, javascript etc.
 
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
-"ycm error highlighting colors - red for bg and white for fg
-highlight YcmErrorSection ctermbg=1 ctermfg=15
+" ripgrep with Fzf
+command! -nargs=* Rg call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
 
+nnoremap <leader>fg :Rg<space>
+
+" Open a new tab with <leader>te
+nnoremap <leader>te :tabedit<CR>
+
+" Move to next tab with Tab
+nnoremap <Tab> :tabnext<CR>
+
+" Move to previous tab with Shift-Tab
+nnoremap <S-Tab> :tabprevious<CR>
+
+" Split Horizontal
+nnoremap <leader>hs :split<CR>
+
+" Split Vertical
+nnoremap <leader>vs :vsplit<CR>
+
+" Open an interactive bash shell with <leader>sh
+nnoremap <leader>sh :sh<CR>
+
+
+" must be compiled with +terminal support
+" :echo has('terminal')
+" output: 1=yes 0=no
+" Open terminal in split horizontal
+nnoremap <leader>ht :horizontal terminal<CR>
+
+" Open terminal in split vertical
+nnoremap <leader>vt :vertical terminal<CR>
+
+" Open terminal in new tab
+nnoremap <leader>tt :tab terminal<CR>
 
 " remapping: nmap(normal mode) vmap(visual) imap(insert mode).
 " the 'nore' is to prevent looping
@@ -121,12 +147,8 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <C-+> :vertical resize +5<CR>
 nnoremap <C--> :vertical resize -5<CR>
 
-" nnoremap <leader>h :wincmd h<CR>
-" nnoremap <leader>j :wincmd j<CR> 
-" nnoremap <leader>k :wincmd k<CR> 
-" nnoremap <leader>l :wincmd l<CR>
 
-"open nerdtree with the following remapping: \(leader)+nt
+"open nerdtree with the following remapping: (leader)+nt
 nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
 "enable icons in nerdtree as well as utf-8 support in general
 set encoding=UTF-8
@@ -137,15 +159,12 @@ let g:webdevicons_enable_nerdtree = 1
 "ctrlp settings (remapped to Ctrl-f because Ctrl-p is now for paste) 
 "ctrl p buffer settings {tab number}gt
 "nnoremap <silent> <C-f> :CtrlP<CR>
-let g:ctrlp_map = '<c-f>'
+let g:ctrlp_map = '<leader>ff'
 let g:ctrlp_switch_buffer = 'Et' " If already opened jump to it
 let g:ctrlp_use_caching = 0 " stop ctrlp caching so it scans new files automatically
-" let g:ctrlp_show_hidden = 1 "show hidden files and directories
+let g:ctrlp_show_hidden = 1 "show hidden files and directories
 set wildignore+=*.a,*.o,*.out "ignore binaries
 set wildignore+=*.bmp,,*.gif,*.ico,*.jpg,*.png,*.pdf "ignore images
-
-"use urlview to choose and open a url
-:noremap <leader>u :w<Home>silent <End> !urlview<CR>
 
 " A syntax for placeholders. Pressing <Ctrl-j> jumps to the next match.
 :inoremap <c-j> <Esc>/<++><CR><Esc>cf>
@@ -154,7 +173,7 @@ set wildignore+=*.bmp,,*.gif,*.ico,*.jpg,*.png,*.pdf "ignore images
 "
 
 " format/style settings
-au BufNewFile,BufRead *.py,*.js,*.go,*.html,*.css,*.h,*.c,*.cpp,*.java,*.md,*.json,*.txt
+au BufNewFile,BufRead *.py,*.js,*.go,*.html,*.css,*.h,*.c,*.cpp,*.java,*.md,*.json,*.txt,*.glsl
 	\ set tabstop=4   |
 	\ set softtabstop=4 |
 	\ set shiftwidth=4 |
@@ -173,49 +192,41 @@ au BufNewFile,BufRead *.yml,*.tf
 	\ set fileformat=unix 
 
 
-let python_highlight_all = 1
-
 "--------------------**ALE**---------------------
-"ale - stop having the linter run continuously, only after you save:
+" ale - stop having the linter run continuously, only after you save:
 " let g:ale_lint_on_text_changed = 'never'
-"ale - stop having the linter show errors upon opening a file:
+" ale - stop having the linter show errors upon opening a file:
 " let g:ale_lint_on_enter = 0
 let g:ale_linters = {'cpp': ['g++'], 'c': ['clang']}
 let g:ale_completion_enabled = 1 "use ale's autocomplete instead of ycm
 let g:ale_set_loclist=1
 " or use vim's Ctrl-N to scan file for suggestions
-
-"change the gutter bg colour from the default grey:
+"
+" change the gutter bg colour from the default grey:
 highlight SignColumn ctermbg=black
-
-"disable highlighting with ale
-let g:ale_set_highlights = 1
-"highlight clear ALEErrorSign
+" disable highlighting with ale
+" let g:ale_set_highlights = 1
+" highlight clear ALEErrorSign
 " let g:ale_sign_error = '!'
-"highlighting format:
+" highlighting format:
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEError ctermbg=red  ctermfg=white
-"highlight ALEStyleError ctermbg=red ctermfg=white
-"highlight clear ALEWarningSign
+" highlight ALEStyleError ctermbg=red ctermfg=white
+" highlight clear ALEWarningSign
 let g:ale_sign_warning = '•'
-"highlighting format:
+" highlighting format:
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 highlight ALEWarning ctermbg=NONE ctermfg=NONE
 " highlight ALEStyleWarning ctermbg=red ctermfg=yellow
 nmap <silent> <leader>j :ALENext<cr>
 nmap <silent> <leader>k :ALEPrevious<cr>
-
-"stop ALE syntax checking on the following files:
+"
+" stop ALE syntax checking on the following files:
 autocmd BufEnter *.tex ALEDisable
-
 let g:ale_set_loclist = 0
 let g:ale_open_list = 0
 let g:ale_set_quickfix = 0
-"------------------------------------------------
-
-"map autopep8 to \8
-"au FileType python noremap <leader>8 :call Autopep8()<CR>
-"let g:autopep8_disable_show_diff=1 " disable the pop up window
+" ------------------------------------------------
 
 "trigger config. for snippets(ultisnips)
 let g:UltiSnipsUsePythonVersion = 3
@@ -225,16 +236,6 @@ let g:UltiSnipsListSnippets="<C-l>"
 let g:UltiSnipsJumpForwardTrigger="<C-j>"
 let g:UltiSnipsJumpBackwardTrigger="<C-k>"
 
-nnoremap <buffer> <F9> :exec '!python' shellescape(@%, 1)<CR>
-
-"flagging unnecessary Whitespace
-highlight BadWhiteSpace ctermbg=red  guibg=red
-:autocmd BufRead,BufNewFile *.py,*.pyw,*.c,*.h,*.go,*.cpp,*.hh match BadWhiteSpace /\s\+$/
-
-" c++ max chars in a line
-:autocmd BufRead,BufNewFile *.c,*.h,*.cpp,*.hh,*.a
-						\ highlight OverLength ctermbg=red ctermfg=white guibg=#592929 |
-						\ match OverLength /\%120v.\+/
 
 "for latex live preview (default pdfviewer)
 " for some extra latex packages install texlive-latexextra
