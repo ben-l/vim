@@ -17,6 +17,9 @@ Plugin 'VundleVim/Vundle.vim'
 " navigate between vim and tmux splits
 Plugin 'christoomey/vim-tmux-navigator'
 
+" gruvbox colorscheme
+Plugin 'morhetz/gruvbox'
+
 "syntax checking
 Plugin 'w0rp/ale'
 
@@ -67,6 +70,9 @@ call vundle#end()		" required
 filetype plugin on
 filetype plugin indent on	" required
 syntax on
+
+set background=dark
+colorscheme gruvbox
 
 " disable beeps
 set noerrorbells visualbell t_vb=
