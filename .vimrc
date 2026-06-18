@@ -3,12 +3,13 @@ let mapleader = " "
 
 "both are required for Vundle and should be at the top of the .vimrc file
 set nocompatible 
+filetype off
 set pastetoggle=<F3>
 
+
 "set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-set runtimepath^=~/.vim/bundle/ctrlp.vim
 "keep Plugin commands between vundle#begin/end
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 "let Vundle manage Vundle, required
@@ -23,8 +24,6 @@ Plugin 'morhetz/gruvbox'
 "syntax checking
 Plugin 'w0rp/ale'
 
-" produce templates/snippets for definitions, functions etc
-Plugin 'SirVer/ultisnips'
 " snippets are separate from the engine. Add the following if needed:
 " see below for trigger configuration
 Plugin 'honza/vim-snippets'
@@ -38,6 +37,7 @@ Plugin 'tpope/vim-fugitive'
 "search files with the ctrl-p program
 Plugin 'ctrlpvim/ctrlp.vim'
 
+Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
 "surround text with parentheses, brackets, quotes, tags etc
@@ -53,7 +53,7 @@ Plugin 'xuhdev/vim-latex-live-preview'
 Plugin 'pangloss/vim-javascript'
 
 "markdown
-Plugin 'plasticboy/vim-markdown'
+"Plugin 'plasticboy/vim-markdown'
 
 "Live Preview for markdown
 " (need npm installed) npm install -g livedown
@@ -65,9 +65,8 @@ Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'stephpy/vim-yaml' 
 
 
-"All of your Plugins must be added before the following line:
+"Plugins must be added before the following line:
 call vundle#end()		" required
-filetype plugin on
 filetype plugin indent on	" required
 syntax on
 
@@ -80,6 +79,12 @@ if has('autocmd')
 	autocmd GUIEnter * set visualbell t_vb=
 endif
 
+" IMPORTANT: set vimwiki config BEFORE end
+let g:vimwiki_list = [{
+  \ 'path': expand('~/documents/vimwiki/'),
+  \ 'syntax': 'default',
+  \ 'ext': '.wiki'
+\ }]
 
 
 " ripgrep with Fzf
@@ -87,6 +92,7 @@ command! -nargs=* Rg call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview(), <bang>0)
 
+"search for ripgrep
 nnoremap <leader>fg :Rg<space>
 
 " Open a new tab with <leader>te
@@ -96,7 +102,7 @@ nnoremap <leader>te :tabedit<CR>
 nnoremap <Tab> :tabnext<CR>
 
 " Move to previous tab with Shift-Tab
-nnoremap <S-Tab> :tabprevious<CR>
+nnoremap <Esc>[Z :tabprevious<CR>
 
 " Split Horizontal
 nnoremap <leader>sx :split<CR>
@@ -125,12 +131,6 @@ nnoremap <leader>tt :tab terminal<CR>
 " for vim-livedown markdown preview, launch/kill the livedown server
 nnoremap <silent> <leader>mt :LivedownToggle<CR>
 
-" copy and paste shortcuts for system clipboard
-" vnoremap <C-y> "+y (commented because the *y line is uncommented) 
-map <C-p> "*P
-" for copying to both the clipboard and primary selection (to paste into st from vim this is required)
-vnoremap <C-y> "*y :let @+=@*<CR>
-
 "Enable Folding
 set nofoldenable
 
@@ -151,6 +151,7 @@ nnoremap <C-H> <C-W><C-H>
 
 nnoremap <C-+> :vertical resize +5<CR>
 nnoremap <C--> :vertical resize -5<CR>
+
 
 
 "open nerdtree with the following remapping: (leader)+nt
@@ -179,22 +180,22 @@ set wildignore+=*.bmp,,*.gif,*.ico,*.jpg,*.png,*.pdf "ignore images
 
 " format/style settings
 au BufNewFile,BufRead *.py,*.js,*.go,*.html,*.css,*.h,*.c,*.cpp,*.java,*.md,*.json,*.txt,*.glsl
-	\ set tabstop=4   |
-	\ set softtabstop=4 |
-	\ set shiftwidth=4 |
-	\ set textwidth=120 |
-	\ set expandtab |
-	\ set autoindent |
-	\ set fileformat=unix 
+	\ setlocal tabstop=4   |
+	\ setlocal softtabstop=4 |
+	\ setlocal shiftwidth=4 |
+	\ setlocal textwidth=120 |
+	\ setlocal expandtab |
+	\ setlocal autoindent |
+	\ setlocal fileformats=unix
 
 au BufNewFile,BufRead *.yml,*.tf
-	\ set tabstop=2   |
-	\ set softtabstop=2 |
-	\ set shiftwidth=2 |
-	\ set textwidth=120 |
-	\ set expandtab |
-	\ set autoindent |
-	\ set fileformat=unix 
+	\ setlocal tabstop=2   |
+	\ setlocal softtabstop=2 |
+	\ setlocal shiftwidth=2 |
+	\ setlocal textwidth=120 |
+	\ setlocal expandtab |
+	\ setlocal autoindent |
+	\ setlocal fileformats=unix
 
 
 "--------------------**ALE**---------------------
@@ -233,53 +234,7 @@ let g:ale_open_list = 0
 let g:ale_set_quickfix = 0
 " ------------------------------------------------
 
-"trigger config. for snippets(ultisnips)
-let g:UltiSnipsUsePythonVersion = 3
-" let g:UltiSnipsSnippetDirectories=["UltiSnips"]
-let g:UltiSnipsExpandTrigger="<C-x>"
-let g:UltiSnipsListSnippets="<C-l>"
-let g:UltiSnipsJumpForwardTrigger="<C-j>"
-let g:UltiSnipsJumpBackwardTrigger="<C-k>"
-
-
 "for latex live preview (default pdfviewer)
 " for some extra latex packages install texlive-latexextra
 let g:livepreview_previewer = 'zathura'
 nnoremap <silent> <leader>sp :LLPStartPreview<CR>
-
-" "C++ Class Generator                                                                                                    
-" e.g. :call Class("testclass")
- function! Class(ClassName)                                                                                              
-    "==================  editing header file =====================                                                       
-     let header = a:ClassName.".h"                                                                                                                                                                                                                                                                                        
-     :vsp %:h/.h                                                                                                                                                                                                                             
-     call append(0,"#ifndef ".toupper(a:ClassName)."_H")                                                                 
-     call append(1,"#define ".toupper(a:ClassName)."_H")                                                           
-     call append(2," ")                                                                                                  
-     call append(3,"class ".a:ClassName )                                                                                
-     call append(4, "{")                                                                                                 
-     call append(5, "   public:")                                                                                        
-     call append(6, "      ".a:ClassName."();")                                                                          
-     call append(7, "      virtual ~".a:ClassName."();")                                                                 
-     call append(8, "   protected:")                                                                                     
-     call append(9, "   private:")                                                                                       
-     call append(10, "};")                                                                                               
-     call append(11,"#endif // ".toupper(a:ClassName)."_H")                                                              
-     :execute 'write' header                                                                                             
-   "================== editing source file ========================                                                      
-     let src    = a:ClassName.".cpp"                                                                                     
-     :vsp %:h/.cpp                                                                                                                                                                                                                     
-     call append(0,"#include ".a:ClassName.".h")                                                                          
-     call append(1," ")                                                                                                   
-     call append(2,a:ClassName."::".a:ClassName."()")                                                                           
-     call append(3,"{")                                                                                                   
-     call append(4,"//ctor ")                                                                                             
-     call append(5,"}")                                                                                                   
-     call append(6," ")                                                                                                   
-     call append(7," ")                                                                                                   
-     call append(8,a:ClassName."::~".a:ClassName."()")                                                                         
-     call append(9,"{")                                                                                                   
-     call append(10,"//dtor ")                                                                                            
-     call append(11,"}")                                                                                                  
-     :execute 'write' src
-endfunction
