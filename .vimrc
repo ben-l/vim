@@ -24,13 +24,6 @@ Plugin 'morhetz/gruvbox'
 "syntax checking
 Plugin 'w0rp/ale'
 
-" snippets are separate from the engine. Add the following if needed:
-" see below for trigger configuration
-Plugin 'honza/vim-snippets'
-
-"file tree
-Plugin 'scrooloose/nerdtree'
-
 " a git wrapper
 Plugin 'tpope/vim-fugitive'
 
@@ -43,14 +36,11 @@ Plugin 'junegunn/fzf.vim'
 "surround text with parentheses, brackets, quotes, tags etc
 Plugin 'tpope/vim-surround'
 
-"icons for nerdtree and ctrlp
+"icons for ctrlp
 Plugin 'ryanoasis/vim-devicons'
 
 "latex live preview
 Plugin 'xuhdev/vim-latex-live-preview'
-
-"javascript
-Plugin 'pangloss/vim-javascript'
 
 "markdown
 "Plugin 'plasticboy/vim-markdown'
@@ -61,9 +51,9 @@ Plugin 'shime/vim-livedown'
 
 "docker syntax highlighting & snippets
 Plugin 'ekalinin/Dockerfile.vim' 
+
 "docker-compose syntax highlighting
 Plugin 'stephpy/vim-yaml' 
-
 
 "Plugins must be added before the following line:
 call vundle#end()		" required
@@ -91,6 +81,9 @@ let g:vimwiki_list = [{
 command! -nargs=* Rg call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview(), <bang>0)
+
+" netrw - open vim's file explorer vertically and resize
+nnoremap <leader>ex :Lex<CR>:vertical resize 30<CR>
 
 "search for ripgrep
 nnoremap <leader>fg :Rg<space>
@@ -153,13 +146,6 @@ nnoremap <C-+> :vertical resize +5<CR>
 nnoremap <C--> :vertical resize -5<CR>
 
 
-
-"open nerdtree with the following remapping: (leader)+nt
-nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
-"enable icons in nerdtree as well as utf-8 support in general
-set encoding=UTF-8
-let g:webdevicons_enable = 1
-let g:webdevicons_enable_nerdtree = 1
 
 
 "ctrlp settings (remapped to Ctrl-f because Ctrl-p is now for paste) 
